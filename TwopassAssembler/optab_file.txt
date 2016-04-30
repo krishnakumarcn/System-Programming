@@ -1,0 +1,4 @@
+STA 60
+LDA 23
+JMP 3A
+ADD 33
