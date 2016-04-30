@@ -1,11 +1,10 @@
-@	1.OnePassAssembler				***		coldblood		
-	2.TwoPassAssembler				*		me
-@	3.AbsoluteLoader				****	me
-@	4.RelocatingLoader				****	me
-	5.MacroProcessor				***		coldblood
-@	6.LexicalAnalyser  						
-	7.OperatorPrecedenceParser		*		insaf
-@	8.RecursiveDescentParser        *****	me
-	9.FirstAndFollw							
-	10.IntermediateCodeGeneration	***		moonblade
-	11.MachineCodeGeneration        ****	insaf | moonblade
+	1.OnePassAssembler
+	3.AbsoluteLoader
+	4.RelocatingLoader
+	5.MacroProcessor
+	6.LexicalAnalyser  
+	7.OperatorPrecedenceParser
+	8.RecursiveDescentParser 
+	9.FirstAndFollw					
+	10.IntermediateCodeGeneration
+	11.MachineCodeGeneration 
