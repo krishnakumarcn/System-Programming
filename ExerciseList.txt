@@ -1,4 +1,5 @@
 	1.OnePassAssembler
+	2.TwoPassAssembler
 	3.AbsoluteLoader
 	4.RelocatingLoader
 	5.MacroProcessor
