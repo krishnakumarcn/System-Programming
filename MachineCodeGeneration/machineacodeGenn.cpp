@@ -1,3 +1,6 @@
+/*
+krishnakumarcn
+*/
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -20,19 +23,19 @@ int main(){
 		expn.pop_front();
 		cout<<"MOV "<<first<<","<<second<<endl;
 		if(!expn.empty()){
-			string third=expn.front();
+			string op=expn.front();
 			expn.pop_front();
-			if(third=="+")
+			if(op=="+")
 				cout<<"ADD ";
-			else if(third=="-")
+			else if(op=="-")
 				cout<<"SUB ";
-			else if(third=="*")
+			else if(op=="*")
 				cout<<"MUL ";
-			else if(third=="/")
+			else if(op=="/")
 				cout<<"DIV ";
-			string fourth=expn.front();
+			second=expn.front();
 			expn.pop_front();
-			cout<<first<<","<<fourth<<endl;
+			cout<<first<<","<<second<<endl;
 		}
 	}
 }
