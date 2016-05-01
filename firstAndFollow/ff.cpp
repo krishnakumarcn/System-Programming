@@ -1,3 +1,6 @@
+/*
+krishnakumarcn
+*/
 #include<iostream>
 #include<fstream>
 #include<map>
@@ -14,18 +17,17 @@ public:
 	FnF(){
 
 	}
-	void printFirst(){
+	void print(){
+		cout<<"First:"<<endl<<"\t";
 		for(set<string>::iterator itr=first.begin();itr!=first.end();itr++)
+			cout<<*itr<<" ";
+		cout<<endl<<"Follow:"<<endl<<"\t";
+		for(set<string>::iterator itr=follow.begin();itr!=follow.end();itr++)
 			cout<<*itr<<" ";
 		cout<<endl;
 		
 	}
-	void printFollow(){
-		for(set<string>::iterator itr=follow.begin();itr!=follow.end();itr++){
-			cout<<*itr<<" ";
-		cout<<endl;
-		}
-	}
+	
 };
 
 map<string,FnF>element;
@@ -60,7 +62,7 @@ int isTerminal(string t){
 void addFirst(string lhs){
 	list< list<string> > prods=productions[lhs];
 	for(auto i=prods.begin();i!=prods.end();i++){
-		for(auto j=i->begin();j!=i->end();j++){
+		for(auto j=(*i).begin();j!=(*i).end();j++){
 			if(isTerminal( (*j)) ){
 				element[lhs].first.insert(*j);
 				break;
@@ -94,14 +96,109 @@ void createFirst(){
 	}
 }
 
-string getElement(string line){
-	stringstream s(line);
-	string el;
-	getline(s,el,' ');
-	return el;
+void createFollow(){
+	bool changed=false;
+	for(auto i=productions.begin();i!=productions.end();i++){
+		string var=i->first;
+		for(auto j=i->second.begin();j!=i->second.end();j++){
+			for(auto k=j->begin();k!=j->end();k++){
+				if(isTerminal(*k))
+					continue;
+				else{
+					auto next=k;
+					next++;
+					bool repeat=true;//for the first case on while make it true here
+					for(;next!=j->end()&&repeat;next++){
+						repeat=false;
+						if(isTerminal(*next)){
+							repeat=false;
+							//insertion on set returns <pointer,bool> bool=true if success
+							if(element[*k].follow.insert(*next).second){//
+								changed=true;
+							}
+						}
+						else{
+							for(auto l=element[*next].first.begin();l!=element[*next].first.end();l++){
+								if(*l != "e"){
+									repeat=false;
+									if(element[*k].follow.insert(*l).second){//
+										changed=true;
+									}
+								}
+								else{
+									repeat=true;
+								}
+							}
+						}
+					}
+					//if the pointer reaches end and still repeat??
+					if(repeat){
+						for(auto m=element[var].follow.begin();m!=element[var].follow.end();m++){
+							if(*m !="e"){
+								if(element[*k].follow.insert(*m).second)//
+									changed=true;
+							}
+						}
+
+					}
+				}
+			}
+		}
+	}
+	if(changed){
+		createFollow();
+	}
 }
 
 
+/*
+void createFollow(){
+	bool changed = false;
+	for(map<string,list<list<string > > >::iterator i=productions.begin();i!=productions.end();i++){
+		string var = i->first;
+		for(list<list<string > >::iterator j=i->second.begin();j!=i->second.end();j++){
+			for(list<string>::iterator k=j->begin();k!=j->end();k++){
+				if(isTerminal(*k)) continue;
+				list<string>::iterator next = k;
+				next++;
+				bool repeat = true;
+				while(next!=j->end()&&repeat){
+					repeat = false;
+					if(isTerminal(*next)){
+						repeat = false;
+						if(element[*k].follow.insert(*next).second)
+							changed = true;
+					}
+					else{
+						for(set<string>::iterator l=element[*next].first.begin();l!=element[*next].first.end();l++){
+							if(*l=="e")
+								repeat = true;
+							else{
+								if(element[*k].follow.insert(*l).second)
+									changed = true;
+							}
+						}
+					}
+					next++;
+				}
+				if(repeat){
+					// cout<<"Repeat : "<<var<<" "<<*k<<endl;
+					for(set<string>::iterator l=element[var].follow.begin();l!=element[var].follow.end();l++){
+						if(*l!="e"){
+							if(element[*k].follow.insert(*l).second)
+								changed = true;
+						}
+					}
+				}
+			}
+		}
+	}
+	if(changed){
+		createFollow();
+	}
+}
+
+*/
 
 int main(){
 	ifstream fin("input.txt");
@@ -121,11 +218,11 @@ int main(){
 		element[lhs]=FnF();
 	}
 	createFirst();
+	createFollow();
 	
 	for(auto itr=element.begin();itr!=element.end();itr++){
 		cout<<"\n"<< itr->first <<" :"<<endl;
-		cout<<"\tFirst: ";
-		(itr->second).printFirst();
+		(itr->second).print();
 	}
 
 
