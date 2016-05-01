@@ -151,54 +151,6 @@ void createFollow(){
 }
 
 
-/*
-void createFollow(){
-	bool changed = false;
-	for(map<string,list<list<string > > >::iterator i=productions.begin();i!=productions.end();i++){
-		string var = i->first;
-		for(list<list<string > >::iterator j=i->second.begin();j!=i->second.end();j++){
-			for(list<string>::iterator k=j->begin();k!=j->end();k++){
-				if(isTerminal(*k)) continue;
-				list<string>::iterator next = k;
-				next++;
-				bool repeat = true;
-				while(next!=j->end()&&repeat){
-					repeat = false;
-					if(isTerminal(*next)){
-						repeat = false;
-						if(element[*k].follow.insert(*next).second)
-							changed = true;
-					}
-					else{
-						for(set<string>::iterator l=element[*next].first.begin();l!=element[*next].first.end();l++){
-							if(*l=="e")
-								repeat = true;
-							else{
-								if(element[*k].follow.insert(*l).second)
-									changed = true;
-							}
-						}
-					}
-					next++;
-				}
-				if(repeat){
-					// cout<<"Repeat : "<<var<<" "<<*k<<endl;
-					for(set<string>::iterator l=element[var].follow.begin();l!=element[var].follow.end();l++){
-						if(*l!="e"){
-							if(element[*k].follow.insert(*l).second)
-								changed = true;
-						}
-					}
-				}
-			}
-		}
-	}
-	if(changed){
-		createFollow();
-	}
-}
-
-*/
 
 int main(){
 	ifstream fin("input.txt");
