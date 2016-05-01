@@ -1,5 +1,29 @@
 /*
 krishnakumarcn
+*//*
+Algorithm
+~~~~~~~~~~~~~~~~~~~~
+
+
+FIRST(X)
+*******************
+If X is a terminal then First(X) is just X!
+If there is a Production X → ε then add ε to first(X)
+If there is a Production X → Y1Y2..Yk then add first(Y1Y2..Yk) to first(X)
+First(Y1Y2..Yk) is either
+    First(Y1) (if First(Y1) doesn't contain ε)
+    OR (if First(Y1) does contain ε) then First (Y1Y2..Yk) is everything in First(Y1) <except for ε > as well as everything in First(Y2..Yk)
+    If First(Y1) First(Y2)..First(Yk) all contain ε then add ε to First(Y1Y2..Yk) as well.
+
+
+
+FOLLOW()
+**************************
+First put $ (the end of input marker) in Follow(S) (S is the start symbol)
+If there is a production A → aBb, (where a can be a whole string) then everything in FIRST(b) except for ε is placed in FOLLOW(B).
+If there is a production A → aB, then everything in FOLLOW(A) is in FOLLOW(B)
+If there is a production A → aBb, where FIRST(b) contains ε, then everything in FOLLOW(A) is in FOLLOW(B)
+
 */
 #include<iostream>
 #include<fstream>
@@ -96,6 +120,9 @@ void createFirst(){
 	}
 }
 
+
+/*createFollow is called multiple time recursively for ensuring all
+	elements are added,since FnF.follow is a set,no duplication*/
 void createFollow(){
 	bool changed=false;
 	for(auto i=productions.begin();i!=productions.end();i++){
@@ -113,7 +140,7 @@ void createFollow(){
 						if(isTerminal(*next)){
 							repeat=false;
 							//insertion on set returns <pointer,bool> bool=true if success
-							if(element[*k].follow.insert(*next).second){//
+							if(element[*k].follow.insert(*next).second){
 								changed=true;
 							}
 						}
@@ -121,7 +148,7 @@ void createFollow(){
 							for(auto l=element[*next].first.begin();l!=element[*next].first.end();l++){
 								if(*l != "e"){
 									repeat=false;
-									if(element[*k].follow.insert(*l).second){//
+									if(element[*k].follow.insert(*l).second){
 										changed=true;
 									}
 								}
@@ -156,11 +183,15 @@ int main(){
 	ifstream fin("input.txt");
 
 	string line,lhs;
+
+	//Make production map from the grammer
+
 	getline(fin,line);
 	stringstream getLhs(line);
 	getLhs>>lhs;
 	productions[lhs]=getProduction(line);
 	element[lhs]=FnF();
+	//follow of start symbol contain $
 	element[lhs].follow.insert("$");
 
 	while(getline(fin,line,'\n')){
@@ -169,9 +200,13 @@ int main(){
 		productions[lhs]=getProduction(line);
 		element[lhs]=FnF();
 	}
+
+	//call first and follow Algorithms
 	createFirst();
 	createFollow();
 	
+
+	//display the output
 	for(auto itr=element.begin();itr!=element.end();itr++){
 		cout<<"\n"<< itr->first <<" :"<<endl;
 		(itr->second).print();
